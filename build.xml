@@ -21,7 +21,11 @@
 								attributes.get( "value" ).replace( /\./g, "/" ) );
 		]]>
 	</scriptdef>
-    
+
+	<condition property="is_windows">
+		<os family="windows"/>
+	</condition>
+
 
 	<!-- CONFIGURATION -->
 
@@ -233,6 +237,29 @@
 		<delete file="${default.dir}/bin/catalog.xml" />
 
 		<!-- Compile ANE -->
+    <antcall target="compile_windows" />
+    <antcall target="compile_osx" />
+
+    <delete file="${android.dir}/${output.dir}/library.swf" />
+		<delete file="${default.dir}/bin/library.swf" />   
+
+	</target>
+
+	<target name="compile_windows" if="is_windows">
+		<exec executable="${air.sdk}/bin/adt.bat" failonerror="true">
+			<arg value="-package"/>
+			<arg value="-target"/>
+			<arg value="ane"/>
+			<arg value="${output.dir}/${output.name}"/>
+			<arg value="./build_config/extension.xml"/>
+			<arg line="-swc ${actionscript.dir}/bin/${actionscript.name}"/>
+			<arg line="-platform Android-ARM -platformoptions ./build_config/platform_android.build.xml -C ${android.dir}/${output.dir} ."/>
+			<arg line="-platform Android-x86 -platformoptions ./build_config/platform_android.build.xml -C ${android.dir}/${output.dir} ."/>
+			<arg line="-platform default -C ${default.dir}/bin ."/>
+		</exec>
+	</target>
+
+	<target name="compile_osx" unless="is_windows">
 		<exec executable="${air.sdk}/bin/adt" failonerror="true">
 			<arg value="-package"/>
 			<arg value="-target"/>
@@ -244,12 +271,7 @@
 			<arg line="-platform Android-x86 -platformoptions ./build_config/platform_android.build.xml -C ${android.dir}/${output.dir} ."/>
 			<arg line="-platform default -C ${default.dir}/bin ."/>
 		</exec>
-		
-		<delete file="${android.dir}/${output.dir}/library.swf" />
-		<delete file="${default.dir}/bin/library.swf" />   
-
 	</target>
-
 
 
 	<!-- CLEAN -->

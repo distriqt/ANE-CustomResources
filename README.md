@@ -21,15 +21,23 @@ This is very important for resources such as notifications icons:
 - [com.distriqt.PushNotifications](http://airnativeextensions.com/extension/com.distriqt.PushNotifications)
 
 
-To use this script ensure you have ant installed on your machine along with a recent version of the AIR and Android SDKs
+To use this script ensure you have Apache Ant installed on your machine along with 
+a recent version of the AIR and Android SDKs and a version of Java.
 
 - **AIR SDK** : http://www.adobe.com/devnet/air/air-sdk-download.html
+
 - **Android SDK** : Easiest way is to install Android Studio: https://developer.android.com/studio/index.html
-- **Apache Ant** : You can download the binary distributions from here: http://ant.apache.org/
+
+- **Apache Ant** : You can download the binary distributions from here: http://ant.apache.org/ 
 
   - macOS (OSX) : 
     - Homebrew : `brew install ant` 
     - MacPorts : `sudo port install apache-ant`
+
+  - Windows: 
+    - Download the binary distribution and extract to a location
+    - Add the `ANT_HOME` environment variable pointing to this location
+    - Update your `PATH` variable, append `%ANT_HOME%\bin` 
 
 
 Once you have all those setup, download this repository and open the `build.config` file. 
@@ -41,6 +49,16 @@ air.sdk = /PATH/TO/YOUR/AIR/SDK
 
 # ANDROID
 android.sdk = /PATH/TO/YOUR/ANDROID/SDK
+```
+
+On Windows it will look something like the following, you must make sure to use two backslashes to correctly escape a backslash:
+
+```
+# AIR SDK
+air.sdk = C:\\Users\\username\\sdks\\air\\AIRSDK_22.0.0.153
+
+# ANDROID
+android.sdk = C:\\Users\\username\\AppData\\Local\\Android\\sdk
 ```
 
 
