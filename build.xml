@@ -142,6 +142,11 @@
 
 	<target name="build_android" depends="create_android_project">
 		<echo message="Building Android library..."/>
+		<antcall target="build_android_osx" />
+		<antcall target="build_android_windows" />
+	</target>
+
+	<target name="build_android_osx" unless="is_windows">
 		<delete>
 			<fileset dir="${android.dir}" defaultexcludes="false">
 				<include name="**/.DS_Store"  />
@@ -153,7 +158,17 @@
 		<exec executable="./gradlew" dir="${android.dir}">
 			<arg line="assemble" />
 		</exec>
-	</target>
+	</target> 
+	<target name="build_android_windows" if="is_windows">
+		<exec executable="gradlew.bat" dir="${android.dir}">
+			<arg line="wrapper" />
+		</exec>
+		<exec executable="gradlew.bat" dir="${android.dir}">
+			<arg line="assemble" />
+		</exec>
+	</target> 
+
+
 
 	<target name="package_android" description="Copy Android files for packaging" >
 		<copy file="${android.dir}/app/build/intermediates/bundles/release/${android.name}" todir="${android.dir}/${output.dir}" />
