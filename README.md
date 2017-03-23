@@ -4,7 +4,7 @@ built by [distriqt //](http://airnativeextensions.com)
 
 > ## Quick Start 
 >
-> 1. Install Apache Ant, the AIR SDK, and the Android SDK
+> 1. Install Apache Ant, the AIR SDK, and the Android SDK with Android Studio
 > 2. update `air.sdk` and `android.sdk` in `build_config/build.config` 
 > 3. Copy your resources to the `res` directory 
 > 4. Run `ant`

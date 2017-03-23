@@ -1,19 +1,19 @@
 <extension xmlns="http://ns.adobe.com/air/extension/4.0">
 	<id>com.distriqt.CustomResources</id>
-	<versionNumber>1</versionNumber>
+	<versionNumber>@VERSION@</versionNumber>
 	<platforms>
 		<platform name="Android-ARM">
 			<applicationDeployment>
-				<nativeLibrary>distriqt.extension.customresources.android.jar</nativeLibrary>
-				<initializer>com.distriqt.extension.customresources.CustomResourcesExtension</initializer>
-				<finalizer>com.distriqt.extension.customresources.CustomResourcesExtension</finalizer>
+				<nativeLibrary>classes.jar</nativeLibrary>
+				<initializer>@PACKAGE@.CustomResourcesExtension</initializer>
+				<finalizer>@PACKAGE@.CustomResourcesExtension</finalizer>
 			</applicationDeployment>
 		</platform>
 		<platform name="Android-x86">
 			<applicationDeployment>
-				<nativeLibrary>distriqt.extension.customresources.android.jar</nativeLibrary>
-				<initializer>com.distriqt.extension.customresources.CustomResourcesExtension</initializer>
-				<finalizer>com.distriqt.extension.customresources.CustomResourcesExtension</finalizer>
+				<nativeLibrary>classes.jar</nativeLibrary>
+				<initializer>@PACKAGE@.CustomResourcesExtension</initializer>
+				<finalizer>@PACKAGE@.CustomResourcesExtension</finalizer>
 			</applicationDeployment>
 		</platform>
 		<platform name="default"> 

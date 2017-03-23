@@ -9,7 +9,7 @@
 		<attribute name="value" /> 
 		<![CDATA[
 		project.setProperty( 	attributes.get( "name" ),
-								attributes.get( "value" ).toLowerCase() );
+								(attributes.get( "value" )+"").toLowerCase() );
 		]]>
 	</scriptdef>
 
@@ -18,7 +18,7 @@
 		<attribute name="value" /> 
 		<![CDATA[
 		project.setProperty( 	attributes.get( "name" ),
-								attributes.get( "value" ).replace( /\./g, "/" ) );
+								(attributes.get( "value" )+"").replace( /\./g, "/" ) );
 		]]>
 	</scriptdef>
 
@@ -38,7 +38,7 @@
 
 	<property name="actionscript.name" value="distriqt.extension.${project.packagename}.swc" />
 	<property name="default.name" value="distriqt.extension.${project.packagename}.default.swc" />
-	<property name="android.name" value="distriqt.extension.${project.packagename}.android.jar" />
+	<property name="android.name" value="classes.jar" />
 	<topath name="android.packagepath" value="${android.package}" />
 	
 	<property name="AIR_SDK_HOME" value="${air.sdk}" />
@@ -52,10 +52,26 @@
 	<!-- SETUP ANDROID PROJECT -->
 
 	<target name="create_android_project">
-		<delete dir="${android.dir}/src" />
-		<mkdir dir="${android.dir}/src/${android.packagepath}" /> 
-		<copy todir="${android.dir}/src/${android.packagepath}" overwrite="true" >
-			<fileset dir="${android.dir}/template">
+		<delete dir="${android.dir}/app" />
+
+		<!-- APP -->
+		<mkdir dir="${android.dir}/app" />
+		<copy todir="${android.dir}/app" overwrite="true" >
+			<fileset dir="${android.dir}/template/app">
+				<include name="**/*" />
+			</fileset>
+			<filterchain>
+				<tokenfilter>
+					<replacestring from="@PACKAGE@" to="${android.package}"/>
+				</tokenfilter>
+			</filterchain>
+		</copy>
+
+
+		<!-- JAVA CODE -->
+		<mkdir dir="${android.dir}/app/src/main/java/${android.packagepath}" /> 
+		<copy todir="${android.dir}/app/src/main/java/${android.packagepath}" overwrite="true" >
+			<fileset dir="${android.dir}/template/java">
 				<include name="*" />
 			</fileset>
 			<filterchain>
@@ -64,26 +80,32 @@
 				</tokenfilter>
 			</filterchain>
 		</copy>
-		<delete dir="${android.dir}/res" />
-		<mkdir dir="${android.dir}/res" />
-		<copy todir="${android.dir}/res" >
+
+		
+		<!-- RESOURCES -->
+		<mkdir dir="${android.dir}/app/src/main/res" />
+		<copy todir="${android.dir}/app/src/main/res" >
 			<fileset dir="${android.resources}">
 				<include name="**/*" />
 				<exclude name="PUT_YOUR_RESOURCES_HERE" />
 			</fileset>
 		</copy>
 
+
+		<!-- PROPERTIES -->
+		<copy file="${android.dir}/template/local.properties" tofile="${android.dir}/local.properties" overwrite="true" >
+			<filterchain>
+				<tokenfilter>
+					<replacestring from="@ANDROIDSDK@" to="${android.sdk}"/>
+				</tokenfilter>
+			</filterchain>
+		</copy>
+
+		<!-- FlashRuntimeExtensions -->
+		<copy file="${air.sdk}/lib/android/FlashRuntimeExtensions.jar" todir="${android.dir}/app/libs" overwrite="true" >
+		</copy>
+
 	</target>
-
-
-
-
-
-
-
-
-
-
 
 
 	<!-- ACTIONSCRIPT LIBRARIES -->
@@ -97,9 +119,8 @@
 		</compc>
 		<echo message="done"/>
 	</target>
-
 	<target name="clean_actionscript" >
-	    <delete dir="${actionscript.dir}/bin" />
+		<delete dir="${actionscript.dir}/bin" />
 	</target>
 
 	<target name="build_default" >
@@ -111,85 +132,46 @@
 		</compc>
 		<echo message="done"/>
 	</target>
-
 	<target name="clean_default" >
 		<delete dir="${default.dir}/bin" />
 	</target>
 
 	
 
-	<!-- ANDROID TASKS -->
-	
-	<property name="sdk.dir" value="${android.sdk}" />
-	<path id="android.antlibs">
-        <pathelement path="${android.sdk}/tools/lib/ant-tasks.jar" />
-    </path>
-    <taskdef resource="anttasks.properties" classpathref="android.antlibs" />
-    
-	<!-- Build the Android library -->
+	<!-- ANDROID LIBRARY  -->
+
 	<target name="build_android" depends="create_android_project">
 		<echo message="Building Android library..."/>
-
-		<getbuildtools name="android.build.tools.dir" verbose="${verbose}" />
-		
-		<mkdir dir="${android.dir}/${output.tmpdir}" />
-		<mkdir dir="${android.dir}/gen" />
-
-		<!-- Builds the R file -->
-		<aapt executable="${aapt}"
-				command="package"
-				verbose="false"
-				manifest="${android.dir}/AndroidManifest.xml"
-				originalManifestPackage="${android.package}"
-				androidjar="${android.sdk}/platforms/${android.target}/android.jar"
-				rfolder="${android.dir}/gen"
-				nonConstantId="${android.library}"
-				libraryResFolderPathRefid="project.library.res.folder.path"
-				libraryPackagesRefid="project.library.packages"
-				libraryRFileRefid="project.library.bin.r.file.path"
-				ignoreAssets="true"
-				binFolder="${android.dir}/${output.tmpdir}"
-				proguardFile="${android.dir}/proguard.cfg">
-			<res path="${android.dir}/res" />
-		</aapt>
-
-		<!-- Compile java sources -->
-		<path id="android-classpath">
-			<pathelement location="${android.sdk}/platforms/${android.target}/android.jar" />
-			<pathelement location="${air.sdk}/lib/android/FlashRuntimeExtensions.jar" />
-			<pathelement location="${supportlibs.dir}/android-support/v4/android-support-v4.jar" />
-		</path>
-	
-		<javac source="1.6" 
-		    target="1.6" 
-		    destdir="${android.dir}/${output.tmpdir}" 
-		    includeantruntime="false" 
-		    debug="true">
-			<!-- <compilerarg value="-Xlint"/> -->
-			<src path="${android.dir}/gen" />
-			<src path="${android.dir}/src" />
-			<classpath refid="android-classpath" />
-		</javac>
-
-		<!-- Package the jar -->
-		<jar destfile="${android.dir}/bin/${android.name}">
-			<fileset dir="${android.dir}/${output.tmpdir}" 
-			    includes="**/*.class"
-			    excludes="${android.packagepath}/R.class ${android.packagepath}/R$*.class ${android.packagepath}/BuildConfig.class"/>
-		</jar>
-		
-		<delete dir="${android.dir}/${output.tmpdir}" />
+		<delete>
+			<fileset dir="${android.dir}" defaultexcludes="false">
+				<include name="**/.DS_Store"  />
+			</fileset>
+		</delete>
+		<exec executable="./gradlew" dir="${android.dir}">
+			<arg line="wrapper" />
+		</exec>
+		<exec executable="./gradlew" dir="${android.dir}">
+			<arg line="assemble" />
+		</exec>
 	</target>
 
 	<target name="package_android" description="Copy Android files for packaging" >
-	    <copy file="${android.dir}/bin/${android.name}" todir="${android.dir}/${output.dir}" />
-		<copy includeEmptyDirs="false" overwrite="true" todir="${android.dir}/${output.dir}/distriqt-extension-${project.packagename}-res">
-			<fileset dir="${android.dir}/res/" />
+		<copy file="${android.dir}/app/build/intermediates/bundles/release/${android.name}" todir="${android.dir}/${output.dir}" />
+		<copy includeEmptyDirs="false" overwrite="true" todir="${android.dir}/${output.dir}/distriqt-extension-customresources-res">
+			<fileset dir="${android.dir}/app/src/main/res/" />
 		</copy>
 		<antcall target="setup_platform_options_android" />
 	</target>
 
 	<target name="setup_platform_options_android" >
+		<copy file="./build_config/extension.xml" tofile="./build_config/extension.build.xml" overwrite="true" >
+			<filterchain>
+				<tokenfilter>
+					<replacestring from="@VERSION@" to="${version}"/>
+					<replacestring from="@PACKAGE@" to="${android.package}"/>
+				</tokenfilter>
+			</filterchain>
+		</copy>
 		<copy file="./build_config/platform_android.xml" tofile="./build_config/platform_android.build.xml" overwrite="true" >
 			<filterchain>
 				<tokenfilter>
@@ -198,15 +180,14 @@
 			</filterchain>
 		</copy>
 	</target>
-	
+
 	<target name="clean_android">
 		<delete file="build_config/platform_android.build.xml"/>
 		<delete dir="${android.dir}/${output.tmpdir}" />
 		<delete dir="${android.dir}/${output.dir}" />
-		<delete dir="${android.dir}/bin" />
-		<delete dir="${android.dir}/gen" />
-		<delete dir="${android.dir}/src" />
-		<delete dir="${android.dir}/res" />
+
+		<delete dir="${android.dir}/build" />
+		<delete dir="${android.dir}/app" />
 	</target>
 
 
@@ -224,7 +205,6 @@
 
 	<target name="package" description="Package ANE">
 		<mkdir dir="${output.dir}" />
-		
 		<antcall target="package_android" />
 		
 		<!-- Copy over library.swf to each platform output -->
@@ -237,12 +217,11 @@
 		<delete file="${default.dir}/bin/catalog.xml" />
 
 		<!-- Compile ANE -->
-    <antcall target="compile_windows" />
-    <antcall target="compile_osx" />
+		<antcall target="compile_windows" />
+		<antcall target="compile_osx" />
 
-    <delete file="${android.dir}/${output.dir}/library.swf" />
+		<delete file="${android.dir}/${output.dir}/library.swf" />
 		<delete file="${default.dir}/bin/library.swf" />   
-
 	</target>
 
 	<target name="compile_windows" if="is_windows">
@@ -251,7 +230,7 @@
 			<arg value="-target"/>
 			<arg value="ane"/>
 			<arg value="${output.dir}/${output.name}"/>
-			<arg value="./build_config/extension.xml"/>
+			<arg value="./build_config/extension.build.xml"/>
 			<arg line="-swc ${actionscript.dir}/bin/${actionscript.name}"/>
 			<arg line="-platform Android-ARM -platformoptions ./build_config/platform_android.build.xml -C ${android.dir}/${output.dir} ."/>
 			<arg line="-platform Android-x86 -platformoptions ./build_config/platform_android.build.xml -C ${android.dir}/${output.dir} ."/>
@@ -265,7 +244,7 @@
 			<arg value="-target"/>
 			<arg value="ane"/>
 			<arg value="${output.dir}/${output.name}"/>
-			<arg value="./build_config/extension.xml"/>
+			<arg value="./build_config/extension.build.xml"/>
 			<arg line="-swc ${actionscript.dir}/bin/${actionscript.name}"/>
 			<arg line="-platform Android-ARM -platformoptions ./build_config/platform_android.build.xml -C ${android.dir}/${output.dir} ."/>
 			<arg line="-platform Android-x86 -platformoptions ./build_config/platform_android.build.xml -C ${android.dir}/${output.dir} ."/>
