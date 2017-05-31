@@ -172,7 +172,7 @@
 
 	<target name="package_android" description="Copy Android files for packaging" >
 		<copy file="${android.dir}/app/build/intermediates/bundles/release/${android.name}" todir="${android.dir}/${output.dir}" />
-		<copy includeEmptyDirs="false" overwrite="true" todir="${android.dir}/${output.dir}/distriqt-extension-customresources-res">
+		<copy includeEmptyDirs="false" overwrite="true" todir="${android.dir}/${output.dir}/${android.resdir}">
 			<fileset dir="${android.dir}/app/src/main/res/" />
 		</copy>
 		<antcall target="setup_platform_options_android" />
@@ -191,6 +191,7 @@
 			<filterchain>
 				<tokenfilter>
 					<replacestring from="@PACKAGE@" to="${android.package}"/>
+					<replacestring from="@RESDIR@" to="${android.resdir}"/>
 				</tokenfilter>
 			</filterchain>
 		</copy>
