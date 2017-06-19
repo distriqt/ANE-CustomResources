@@ -160,11 +160,15 @@
 		</exec>
 	</target> 
 	<target name="build_android_windows" if="is_windows">
-		<exec executable="gradlew.bat" dir="${android.dir}">
-			<arg line="wrapper" />
+		<exec executable="cmd" dir="${android.dir}">
+			<arg value="/c"/>
+			<arg value="gradlew.bat"/>
+			<arg value="wrapper" />
 		</exec>
-		<exec executable="gradlew.bat" dir="${android.dir}">
-			<arg line="assemble" />
+		<exec executable="cmd" dir="${android.dir}">
+			<arg value="/c"/>
+			<arg value="gradlew.bat"/>
+			<arg value="assemble" />
 		</exec>
 	</target> 
 
