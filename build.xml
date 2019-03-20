@@ -175,7 +175,7 @@
 
 
 	<target name="package_android" description="Copy Android files for packaging" >
-		<copy file="${android.dir}/app/build/intermediates/bundles/release/${android.name}" todir="${android.dir}/${output.dir}" />
+		<copy file="${android.dir}/app/build/intermediates/packaged-classes/release/${android.name}" todir="${android.dir}/${output.dir}" />
 		<copy includeEmptyDirs="false" overwrite="true" todir="${android.dir}/${output.dir}/${android.resdir}">
 			<fileset dir="${android.dir}/app/src/main/res/" />
 		</copy>
