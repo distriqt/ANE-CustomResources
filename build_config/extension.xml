@@ -9,6 +9,13 @@
 				<finalizer>@PACKAGE@.CustomResourcesExtension</finalizer>
 			</applicationDeployment>
 		</platform>
+		<platform name="Android-ARM64">
+			<applicationDeployment>
+				<nativeLibrary>classes.jar</nativeLibrary>
+				<initializer>@PACKAGE@.CustomResourcesExtension</initializer>
+				<finalizer>@PACKAGE@.CustomResourcesExtension</finalizer>
+			</applicationDeployment>
+		</platform>
 		<platform name="Android-x86">
 			<applicationDeployment>
 				<nativeLibrary>classes.jar</nativeLibrary>
