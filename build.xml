@@ -255,6 +255,7 @@
 			<arg line="-platform Android-ARM -platformoptions ./build_config/platform_android.build.xml -C ${android.dir}/${output.dir} ."/>
 			<arg line="-platform Android-ARM64 -platformoptions ./build_config/platform_android.build.xml -C ${android.dir}/${output.dir} ."/>
 			<arg line="-platform Android-x86 -platformoptions ./build_config/platform_android.build.xml -C ${android.dir}/${output.dir} ."/>
+			<arg line="-platform Android-x64 -platformoptions ./build_config/platform_android.build.xml -C ${android.dir}/${output.dir} ."/>
 			<arg line="-platform default -C ${default.dir}/bin ."/>
 		</exec>
 	</target>
@@ -270,6 +271,7 @@
 			<arg line="-platform Android-ARM -platformoptions ./build_config/platform_android.build.xml -C ${android.dir}/${output.dir} ."/>
 			<arg line="-platform Android-ARM64 -platformoptions ./build_config/platform_android.build.xml -C ${android.dir}/${output.dir} ."/>
 			<arg line="-platform Android-x86 -platformoptions ./build_config/platform_android.build.xml -C ${android.dir}/${output.dir} ."/>
+			<arg line="-platform Android-x64 -platformoptions ./build_config/platform_android.build.xml -C ${android.dir}/${output.dir} ."/>
 			<arg line="-platform default -C ${default.dir}/bin ."/>
 		</exec>
 	</target>

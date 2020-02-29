@@ -23,6 +23,13 @@
 				<finalizer>@PACKAGE@.CustomResourcesExtension</finalizer>
 			</applicationDeployment>
 		</platform>
+		<platform name="Android-x64">
+			<applicationDeployment>
+				<nativeLibrary>classes.jar</nativeLibrary>
+				<initializer>@PACKAGE@.CustomResourcesExtension</initializer>
+				<finalizer>@PACKAGE@.CustomResourcesExtension</finalizer>
+			</applicationDeployment>
+		</platform>
 		<platform name="default"> 
 			<applicationDeployment /> 
 		</platform>
