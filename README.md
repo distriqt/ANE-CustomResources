@@ -57,7 +57,7 @@ for android.sdk - *forward slash* (See https://github.com/distriqt/ANE-CustomRes
 
 ```
 # AIR SDK (backslash)
-air.sdk = C:\\Users\\username\\sdks\\air\\AIRSDK_22.0.0.153 # backslashes here
+air.sdk = C:\\Users\\username\\sdks\\air\\AIRSDK_22.0.0.153
 
 # ANDROID (forward slash)
 android.sdk = C:/Users/username/AppData/Local/Android/sdk
