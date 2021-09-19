@@ -52,8 +52,8 @@ android.sdk = /PATH/TO/YOUR/ANDROID/SDK
 ```
 
 On Windows it will look something like the following, you must make sure to use:
-for air.sdk - two backslashes to correctly escape a backslash:
-for android.sdk - *forward slash* (See https://github.com/distriqt/ANE-CustomResources/issues/50, https://github.com/distriqt/ANE-CustomResources/issues/47)
+- for `air.sdk` - two backslashes to correctly escape a backslash:
+- for `android.sdk` - *forward slash* (See https://github.com/distriqt/ANE-CustomResources/issues/50, https://github.com/distriqt/ANE-CustomResources/issues/47)
 
 ```
 # AIR SDK (backslash)
